@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/icon-192x192.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#FF5F1F" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="TravelOnBuddy" />
+  <meta name="application-name" content="TravelOnBuddy" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TravelOnBuddy — Premium Banaras Companions</title>
+  <!-- Google Fonts: Manrope, Plus Jakarta Sans, and Noto Sans Devanagari for clean Hindi typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body class="bg-[#FAFAF8] text-[#1D1D1F] font-sans antialiased selection:bg-[#F28C28]/20 selection:text-[#EC5800]">
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    // Register PWA service worker safely in supported production/HTTPS environments
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => {
+            // Successfully registered
+          })
+          .catch(err => {
+            console.warn('PWA ServiceWorker registration notice:', err);
+          });
+      });
+    }
+  </script>
+</body>
+
+</html>

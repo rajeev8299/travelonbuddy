@@ -1,0 +1,307 @@
+@import "tailwindcss";
+
+@theme {
+  /* ====================================================================
+     TRAVELONBUDDY — APPLE-INSPIRED MINIMALIST LUXURY DESIGN SYSTEM
+     Brand Palette:
+     - Bright Orange: #FFAC1C
+     - Cadmium Orange: #F28C28
+     - Coral: #FF7F50
+     - Neon Orange: #FF5F1F
+     - Persimmon: #EC5800
+
+     Supporting Palette:
+     - White: #FFFFFF
+     - Off-white: #FAFAF8
+     - Light gray: #F5F5F3
+     - Dark charcoal: #1D1D1F
+     - Secondary text: #6E6E73
+     - Border: #E8E8E6
+     ==================================================================== */
+
+  /* 1. Official Orange Scale */
+  --color-orange-bright: #FFAC1C;
+  --color-orange-cadmium: #F28C28;
+  --color-orange-coral: #FF7F50;
+  --color-orange-neon: #FF5F1F;
+  --color-orange-persimmon: #EC5800;
+
+  /* 2. Apple Supporting Neutrals */
+  --color-apple-white: #FFFFFF;
+  --color-apple-offwhite: #FAFAF8;
+  --color-apple-lightgray: #F5F5F3;
+  --color-apple-charcoal: #1D1D1F;
+  --color-apple-secondary: #6E6E73;
+  --color-apple-border: #E8E8E6;
+
+  /* 3. Backward Compatibility Aliases */
+  --color-ivory: #FAFAF8;
+  --color-sand: #F5F5F3;
+  --color-sand-border: #E8E8E6;
+  --color-pale-orange: #FAFAF8;
+  --color-light-orange: #FFF7ED;
+  --color-apricot-orange: #FFEDD5;
+
+  --color-river: #1D1D1F;
+  --color-river-deep: #151516;
+  --color-river-light: #2C2C2E;
+
+  --color-saffron: #F28C28;
+  --color-saffron-light: #FFAC1C;
+  --color-saffron-muted: #FFF7ED;
+  --color-deep-orange: #EC5800;
+
+  --color-charcoal: #1D1D1F;
+  --color-charcoal-light: #6E6E73;
+  --color-charcoal-muted: #86868B;
+
+  /* Typography with robust Devanagari fallback */
+  --font-sans: 'Manrope', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-serif: 'Playfair Display', 'Noto Serif Devanagari', Georgia, serif;
+}
+
+:root {
+  color-scheme: light;
+  --color-primary: #F28C28;
+  --color-primary-hover: #EC5800;
+  --color-primary-neon: #FF5F1F;
+  --color-background: #FAFAF8;
+  --color-surface: #FFFFFF;
+  --color-text: #1D1D1F;
+  --color-text-secondary: #6E6E73;
+  --color-border: #E8E8E6;
+}
+
+* {
+  border-color: #E8E8E6;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FAFAF8;
+  color: #1D1D1F;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  letter-spacing: -0.011em;
+}
+
+/* Apple-style subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE TABLE CONTAINER UTILITY
+   Prevents entire page overflow while providing smooth touch-scrollable tables
+   -------------------------------------------------------------------------- */
+.table-responsive-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive-container table {
+  min-width: 640px;
+}
+
+/* --------------------------------------------------------------------------
+   APPLE-INSPIRED MICRO-INTERACTIONS & MOTION DESIGN SYSTEM
+   - Purposeful, graceful timing (cubic-bezier(0.16, 1, 0.3, 1))
+   - Respects prefers-reduced-motion
+   -------------------------------------------------------------------------- */
+
+/* Hardware accelerated transition utilities */
+.motion-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* Subtle reveal on scroll / entrance */
+@keyframes appleFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes appleFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-up {
+  animation: appleFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: appleFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Stagger delay helpers for coordinated entrances */
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+
+/* Interactive Hover Card Lift */
+.hover-lift {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.08);
+}
+
+/* Interactive Image Zoom Container */
+.img-zoom-container {
+  overflow: hidden;
+}
+
+.img-zoom-container img {
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.img-zoom-container:hover img {
+  transform: scale(1.035);
+}
+
+/* Apple-style Tactile Button Interactions */
+.btn-press {
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hover-lift:hover {
+    transform: none !important;
+  }
+
+  .img-zoom-container:hover img {
+    transform: none !important;
+  }
+
+  .btn-press:active {
+    transform: none !important;
+  }
+}
+
+/* Minimalist Button and Surface Classes */
+.btn-primary {
+  background-color: #FF5F1F;
+  color: #FFFFFF;
+  font-weight: 500;
+  border-radius: 9999px;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(255, 95, 31, 0.2);
+}
+.btn-primary:hover {
+  background-color: #EC5800;
+  box-shadow: 0 6px 18px rgba(236, 88, 0, 0.28);
+  transform: translateY(-0.5px);
+}
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #1D1D1F;
+  border: 1px solid #E8E8E6;
+  font-weight: 500;
+  border-radius: 9999px;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-secondary:hover {
+  background-color: #F5F5F3;
+  border-color: #D2D2D7;
+}
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.card-apple {
+  background-color: #FFFFFF;
+  border: 1px solid #E8E8E6;
+  border-radius: 1.5rem;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-apple:hover {
+  border-color: #D2D2D7;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.05);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* ====================================================================
+   FLUID FULL-WIDTH LAYOUT CONTAINER UTILITIES
+   Spacious, edge-to-edge layout optimization for wide viewports
+   ==================================================================== */
+.layout-container {
+  width: 100%;
+  max-width: 1720px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 3.5vw, 3.5rem);
+  padding-right: clamp(1rem, 3.5vw, 3.5rem);
+}
+
+.layout-container-wide {
+  width: 100%;
+  max-width: 1880px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 3vw, 3rem);
+  padding-right: clamp(1rem, 3vw, 3rem);
+}
+
