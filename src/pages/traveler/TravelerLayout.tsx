@@ -18,6 +18,7 @@ import {
   Compass,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const TravelerLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -51,7 +52,7 @@ export const TravelerLayout: React.FC = () => {
       {/* Mobile Top Header */}
       <div className="lg:hidden bg-white text-charcoal p-4 flex items-center justify-between border-b border-sand-border shadow-2xs">
         <Link to="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="TravelOnBuddy" className="h-8 w-auto object-contain" />
+          <img src={getAssetUrl('logo.png')} alt="TravelOnBuddy" className="h-8 w-auto object-contain" />
           <span className="font-serif font-bold text-lg text-river">TravelOnBuddy</span>
         </Link>
         <button
@@ -70,7 +71,7 @@ export const TravelerLayout: React.FC = () => {
         <div className="space-y-6">
           {/* Logo in Desktop */}
           <div className="hidden lg:flex items-center gap-2.5 pb-4 border-b border-sand-border">
-            <img src="/logo.png" alt="TravelOnBuddy" className="h-10 w-auto object-contain" />
+            <img src={getAssetUrl('logo.png')} alt="TravelOnBuddy" className="h-10 w-auto object-contain" />
             <div>
               <span className="font-serif text-lg font-bold text-river block leading-none">
                 {language === 'HI' ? 'यात्री पोर्टल' : 'Traveler Portal'}

@@ -1,3 +1,5 @@
+import { getAssetUrl } from '../utils/assetHelper';
+
 /**
  * AUTHENTIC REAL PHOTOGRAPHY REGISTRY FOR TRAVELONBUDDY (VARANASI / KASHI)
  * 
@@ -11,10 +13,10 @@
 
 export const IMAGES = {
   // OFFICIAL HERO PHOTOGRAPH (High-resolution authentic Wikimedia Commons capture of Dashashwamedh Ghat & River Ganga)
-  heroVaranasiDashashwamedh: '/images/hero/varanasi-dashashwamedh-ghat.jpg',
+  heroVaranasiDashashwamedh: getAssetUrl('images/hero/varanasi-dashashwamedh-ghat.jpg'),
 
   // HERO & VISTAS (Authentic Varanasi Ghats, river boats, natural sunrise over Ganga)
-  heroGhatSunrise: '/images/hero/varanasi-dashashwamedh-ghat.jpg',
+  heroGhatSunrise: getAssetUrl('images/hero/varanasi-dashashwamedh-ghat.jpg'),
 
   // Photo by Shreyas Sane / Unsplash: Early morning wooden boats floating on misty Ganga at Kashi
   heroBoatMorning: 'https://images.unsplash.com/photo-1609946850785-5bcfd35b9b1f?auto=format&fit=crop&w=2000&q=85',

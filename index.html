@@ -24,20 +24,6 @@
 <body class="bg-[#FAFAF8] text-[#1D1D1F] font-sans antialiased selection:bg-[#F28C28]/20 selection:text-[#EC5800]">
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
-  <script>
-    // Register PWA service worker safely in supported production/HTTPS environments
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(reg => {
-            // Successfully registered
-          })
-          .catch(err => {
-            console.warn('PWA ServiceWorker registration notice:', err);
-          });
-      });
-    }
-  </script>
 </body>
 
 </html>

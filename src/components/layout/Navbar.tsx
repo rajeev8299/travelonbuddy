@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Globe } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const Navbar: React.FC = () => {
   const { language, setLanguage, t } = useApp();
@@ -70,7 +71,7 @@ export const Navbar: React.FC = () => {
           className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5F1F]/50 rounded-lg p-0.5"
         >
           <img
-            src="/logo.png"
+            src={getAssetUrl('logo.png')}
             alt="TravelOnBuddy Logo"
             className="h-8 sm:h-8.5 w-auto object-contain transition-transform duration-300 ease-out group-hover:scale-105"
           />

@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Download, Share, PlusSquare, Sparkles } from 'lucide-react';
 import { usePwaInstall } from '../../hooks/usePwaInstall';
 import { useApp } from '../../context/AppContext';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const PwaInstallModal: React.FC = () => {
   const { showPrompt, isIos, installApp, dismissPrompt } = usePwaInstall();
@@ -35,7 +36,7 @@ export const PwaInstallModal: React.FC = () => {
           <div className="relative">
             <div className="w-[68px] h-[68px] rounded-2xl bg-[#FAFAF8] border border-[#E8E8E6] p-1.5 flex items-center justify-center shadow-xs">
               <img
-                src="/logo.png"
+                src={getAssetUrl('logo.png')}
                 alt="TravelOnBuddy"
                 className="w-full h-full object-contain"
               />

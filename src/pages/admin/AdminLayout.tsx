@@ -22,6 +22,7 @@ import {
   LogOut,
   FolderGit2,
 } from 'lucide-react';
+import { getAssetUrl } from '../../utils/assetHelper';
 import { useApp } from '../../context/AppContext';
 
 export const AdminLayout: React.FC = () => {
@@ -62,7 +63,7 @@ export const AdminLayout: React.FC = () => {
       {/* Mobile Header */}
       <div className="lg:hidden bg-white text-charcoal p-4 flex items-center justify-between border-b border-sand-border shadow-2xs">
         <Link to="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="TravelOnBuddy" className="h-8 w-auto object-contain" />
+          <img src={getAssetUrl('logo.png')} alt="TravelOnBuddy" className="h-8 w-auto object-contain" />
           <span className="font-serif font-bold text-lg text-river">Admin Console</span>
         </Link>
         <button
@@ -82,7 +83,7 @@ export const AdminLayout: React.FC = () => {
         <div className="space-y-5">
           {/* Logo */}
           <div className="hidden lg:flex items-center gap-2.5 pb-4 border-b border-sand-border">
-            <img src="/logo.png" alt="TravelOnBuddy" className="h-10 w-auto object-contain" />
+            <img src={getAssetUrl('logo.png')} alt="TravelOnBuddy" className="h-10 w-auto object-contain" />
             <div>
               <span className="font-serif text-lg font-bold text-river block leading-none">
                 TravelOnBuddy

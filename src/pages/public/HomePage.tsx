@@ -6,6 +6,7 @@ import { DestinationCard } from '../../components/destinations/DestinationCard';
 import { TravelBookingSearchBar } from '../../components/common/TravelBookingSearchBar';
 import { HomeEventsSection } from '../../components/events/HomeEventsSection';
 import { TESTIMONIALS_DATA } from '../../data/mockData';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const HomePage: React.FC = () => {
   const { destinations, buddies, experiences, t, language } = useApp();
@@ -102,9 +103,9 @@ export const HomePage: React.FC = () => {
         {/* Cinematic Travel Photograph with Refined Rounded Border Frame */}
         <div className="mt-12 sm:mt-16 relative rounded-3xl overflow-hidden bg-[#F5F5F3] border border-[#E8E8E6] shadow-[0_8px_40px_rgba(0,0,0,0.06)] aspect-[16/10] sm:aspect-[21/10] lg:aspect-[24/10] group animate-fade-up delay-300">
           <picture className="w-full h-full block">
-            <source srcSet="/images/hero/varanasi-dashashwamedh-ghat.webp" type="image/webp" />
+            <source srcSet={getAssetUrl('images/hero/varanasi-dashashwamedh-ghat.webp')} type="image/webp" />
             <img
-              src="/images/hero/varanasi-dashashwamedh-ghat.jpg"
+              src={getAssetUrl('images/hero/varanasi-dashashwamedh-ghat.jpg')}
               alt="Companionship along Dashashwamedh Ghat & River Ganga in Varanasi, India"
               fetchPriority="high"
               loading="eager"

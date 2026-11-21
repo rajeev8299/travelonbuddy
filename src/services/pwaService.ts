@@ -95,3 +95,37 @@ export function clearInstallDismissal(): void {
     // Ignore storage issues
   }
 }
+
+/**
+ * Register Service Worker using environment-aware base path
+ */
+export function registerServiceWorker(): void {
+  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+
+  // Only register in secure contexts or localhost
+  const isLocalhost = Boolean(
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '[::1]' ||
+    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+  );
+
+  if (window.location.protocol !== 'https:' && !isLocalhost) return;
+
+  window.addEventListener('load', () => {
+    const rawBase = import.meta.env.BASE_URL || '/';
+    const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+    const swUrl = `${base}sw.js`;
+
+    navigator.serviceWorker
+      .register(swUrl, { scope: base })
+      .then((registration) => {
+        // SW successfully registered
+        if (registration.installing) {
+          console.debug('TravelOnBuddy ServiceWorker installing at scope:', registration.scope);
+        }
+      })
+      .catch((err) => {
+        console.warn('TravelOnBuddy ServiceWorker registration note:', err);
+      });
+  });
+}

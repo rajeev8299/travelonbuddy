@@ -1,18 +1,27 @@
-const CACHE_NAME = 'travelonbuddy-static-v1';
-const OFFLINE_FALLBACK = '/offline.html';
+const CACHE_NAME = 'travelonbuddy-static-v2';
+
+// Dynamic base resolution from service worker registration scope
+const BASE_PATH = self.registration ? self.registration.scope : '/';
+const getPath = (p) => {
+  const cleanP = p.startsWith('/') ? p.slice(1) : p;
+  const cleanBase = BASE_PATH.endsWith('/') ? BASE_PATH : `${BASE_PATH}/`;
+  return `${cleanBase}${cleanP}`;
+};
+
+const OFFLINE_FALLBACK = getPath('offline.html');
 
 const STATIC_ASSETS = [
-  '/',
-  '/offline.html',
-  '/manifest.json',
-  '/logo.png',
-  '/logo-transparent.png',
-  '/icon-192x192.png',
-  '/icon-512x512.png',
-  '/apple-touch-icon.png',
-  '/icon-maskable-192x192.png',
-  '/icon-maskable-512x512.png',
-  '/favicon.svg'
+  BASE_PATH,
+  getPath('offline.html'),
+  getPath('manifest.json'),
+  getPath('logo.png'),
+  getPath('logo-transparent.png'),
+  getPath('icon-192x192.png'),
+  getPath('icon-512x512.png'),
+  getPath('apple-touch-icon.png'),
+  getPath('icon-maskable-192x192.png'),
+  getPath('icon-maskable-512x512.png'),
+  getPath('favicon.svg')
 ];
 
 // Install: Cache essential assets & offline page

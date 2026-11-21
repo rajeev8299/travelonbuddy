@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ export const LoginPage: React.FC = () => {
         <div className="text-center space-y-2">
           <div className="w-20 h-20 flex items-center justify-center mx-auto mb-3">
             <img
-              src="/logo.png"
+              src={getAssetUrl('logo.png')}
               alt="TravelOnBuddy Logo"
               className="w-full h-full object-contain"
             />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const Footer: React.FC = () => {
   const { t } = useApp();
@@ -12,7 +13,7 @@ export const Footer: React.FC = () => {
           {/* Brand Info */}
           <div className="col-span-2 space-y-3">
             <Link to="/" className="inline-flex items-center gap-2">
-              <img src="/logo.png" alt="TravelOnBuddy" className="h-7 w-auto object-contain" />
+              <img src={getAssetUrl('logo.png')} alt="TravelOnBuddy" className="h-7 w-auto object-contain" />
               <span className="font-sans text-base font-semibold text-[#1D1D1F] tracking-tight">
                 TravelOn<span className="text-[#FF5F1F]">Buddies</span>
               </span>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export const RegisterPage: React.FC = () => {
         <div className="text-center space-y-2">
           <div className="w-16 h-16 rounded-2xl bg-river flex items-center justify-center mx-auto mb-3 p-2.5 shadow-sm">
             <img
-              src="/logo.png"
+              src={getAssetUrl('logo.png')}
               alt="TravelOnBuddy Logo"
               className="w-full h-full object-contain"
             />
