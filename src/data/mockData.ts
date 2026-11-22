@@ -129,10 +129,10 @@ export const DESTINATIONS_DATA: Destination[] = [
     category: 'Heritage',
     description: 'Marvel at 953 honeycombed jharokhas (casements) built by Maharaja Sawai Pratap Singh and the pink-walled royal avenues.',
     longDescription: 'Rising five storeys without a solid foundation, Hawa Mahal is a masterpiece of Rajput-Mughal crown architecture designed for royal women to witness street festivities undisturbed. Lined with Johari Bazaar gem jewelers, Bapu Bazaar block-printers, and quintessential Rajasthani chai stalls.',
-    coverImage: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=85',
+    coverImage: IMAGES.hawaMahal,
     gallery: [
-      'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1600100397608-f010e425313a?auto=format&fit=crop&w=1200&q=85'
+      IMAGES.hawaMahal,
+      'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=85'
     ],
     suggestedDuration: '2 - 3 Hours',
     bestTimeToVisit: 'Morning (8:00 AM – 11:00 AM)',
@@ -149,9 +149,9 @@ export const DESTINATIONS_DATA: Destination[] = [
     category: 'Heritage',
     description: 'Imposing hill fort overlooking Maota Lake, famous for Sheesh Mahal (Mirror Palace) and Rajput regal courtyards.',
     longDescription: 'Perched high on Cheel ka Teela (Hill of Eagles), Amber Palace showcases opulent Rajput majesty. Walk through the hall of public audience (Diwan-e-Aam), the private chambers embedded with Belgian convex mirrors (Sheesh Mahal), and ancient underground tunnels connecting to Jaigarh Fort.',
-    coverImage: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=85',
+    coverImage: IMAGES.amberFort,
     gallery: [
-      'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=85'
+      IMAGES.amberFort
     ],
     suggestedDuration: '3 - 4 Hours',
     bestTimeToVisit: 'Early Morning (8:00 AM – 12:00 PM)',
@@ -293,7 +293,7 @@ export const EXPERIENCES_DATA: TravelExperience[] = [
     ],
     recommendedTimes: ['8:30 AM - 12:30 PM', '2:30 PM - 6:30 PM'],
     includedHighlights: ['Local companion with Rajput history lore', 'Artisan workshop entry', 'Authentic snack sampling'],
-    coverImage: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=85',
+    coverImage: IMAGES.hawaMahal,
     badge: 'Jaipur Signature',
   },
 ];
