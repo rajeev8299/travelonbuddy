@@ -43,11 +43,8 @@ jobs:
           test -d dist/assets || { echo "dist/assets directory is missing!"; exit 1; }
           echo "All production artifacts verified successfully."
 
-      - name: Enable and configure GitHub Pages
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
-          token: ${{ secrets.PAGES_ENABLEMENT_TOKEN }}
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
