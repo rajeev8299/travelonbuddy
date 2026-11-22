@@ -116,7 +116,8 @@ export const AdminBookingsPage: React.FC = () => {
                 <th className="p-4">Traveler Info</th>
                 <th className="p-4">Dates & Duration</th>
                 <th className="p-4">Assigned Buddy</th>
-                <th className="p-4">Status</th>
+                <th className="p-4">Booking Status</th>
+                <th className="p-4">Payment</th>
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -149,6 +150,15 @@ export const AdminBookingsPage: React.FC = () => {
                   <td className="p-4">
                     <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-sand text-river">
                       {r.status}
+                    </span>
+                  </td>
+                  <td className="p-4">
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                      r.paymentStatus === 'Successful'
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-amber-100 text-amber-800'
+                    }`}>
+                      {r.paymentStatus || 'Pending'}
                     </span>
                   </td>
                   <td className="p-4 text-right">

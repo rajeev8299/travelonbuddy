@@ -48,6 +48,9 @@ interface AppContextType {
   requests: TravelRequest[];
   addRequest: (newReq: Omit<TravelRequest, 'id' | 'bookingRef' | 'createdAt' | 'status' | 'timeline'>) => TravelRequest;
   updateRequestStatus: (id: string, status: TravelRequest['status'], buddyId?: string, buddyName?: string) => void;
+  updatePaymentStatus: (id: string, paymentStatus: 'Pending' | 'Successful' | 'Failed' | 'Refunded', transactionId?: string) => void;
+  rescheduleBooking: (id: string, newStartDate: string, newEndDate?: string, newStartTime?: string) => void;
+  cancelBooking: (id: string, reason: string) => void;
 
   // Buddies
   buddies: TravelBuddy[];
@@ -423,6 +426,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `req-${Date.now()}`,
       bookingRef: `TOB-KSH-${randomCode}`,
       status: 'Request Submitted',
+      paymentStatus: 'Pending',
       createdAt: new Date().toISOString(),
       timeline: [
         {
@@ -477,6 +481,81 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       })
     );
     showToast(`Request updated to "${status}"`);
+  };
+
+  const updatePaymentStatus = (
+    id: string,
+    paymentStatus: 'Pending' | 'Successful' | 'Failed' | 'Refunded',
+    transactionId?: string
+  ) => {
+    setRequests(prev =>
+      prev.map(r => {
+        if (r.id !== id) return r;
+        const updatedTimeline = [...r.timeline];
+        updatedTimeline.push({
+          title: `Payment: ${paymentStatus}`,
+          description: transactionId ? `Transaction Ref: ${transactionId}` : `Payment state set to ${paymentStatus}`,
+          time: 'Just now',
+          status: 'completed',
+        });
+        return {
+          ...r,
+          paymentStatus,
+          paymentTransactionId: transactionId || r.paymentTransactionId,
+          timeline: updatedTimeline,
+        };
+      })
+    );
+    showToast(`Payment updated: ${paymentStatus}`);
+  };
+
+  const rescheduleBooking = (
+    id: string,
+    newStartDate: string,
+    newEndDate?: string,
+    newStartTime?: string
+  ) => {
+    setRequests(prev =>
+      prev.map(r => {
+        if (r.id !== id) return r;
+        const updatedTimeline = [...r.timeline];
+        updatedTimeline.push({
+          title: 'Rescheduled',
+          description: `Dates shifted to ${newStartDate}${newEndDate ? ` to ${newEndDate}` : ''}${newStartTime ? ` at ${newStartTime}` : ''}`,
+          time: 'Just now',
+          status: 'completed',
+        });
+        return {
+          ...r,
+          startDate: newStartDate,
+          endDate: newEndDate || newStartDate,
+          startTime: newStartTime || r.startTime,
+          timeline: updatedTimeline,
+        };
+      })
+    );
+    showToast('Booking rescheduled successfully.');
+  };
+
+  const cancelBooking = (id: string, reason: string) => {
+    setRequests(prev =>
+      prev.map(r => {
+        if (r.id !== id) return r;
+        const updatedTimeline = [...r.timeline];
+        updatedTimeline.push({
+          title: 'Cancelled',
+          description: `Booking cancelled: ${reason}`,
+          time: 'Just now',
+          status: 'completed',
+        });
+        return {
+          ...r,
+          status: 'Cancelled',
+          timeline: updatedTimeline,
+        };
+      })
+    );
+    showToast('Booking has been cancelled.');
   };
 
   const addBuddy = (buddy: TravelBuddy) => {
@@ -799,6 +878,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         requests,
         addRequest,
         updateRequestStatus,
+        updatePaymentStatus,
+        rescheduleBooking,
+        cancelBooking,
         buddies,
         addBuddy,
         updateBuddyStatus,

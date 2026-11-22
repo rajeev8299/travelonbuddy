@@ -200,9 +200,28 @@ export const BuddyDashboardPage: React.FC = () => {
                 Pickup: {req.pickupLocation} • Date: {req.startDate}
               </p>
             </div>
-            <span className="text-xs font-bold text-saffron bg-saffron-muted px-3 py-1 rounded-full border border-saffron/30 self-start sm:self-auto">
-              Ready for Trip
-            </span>
+            
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              {req.status !== 'Trip In Progress' && req.status !== 'Trip Completed' && (
+                <button
+                  onClick={() => updateRequestStatus(req.id, 'Trip In Progress')}
+                  className="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-2xs transition"
+                >
+                  Mark Trip Started
+                </button>
+              )}
+              {req.status === 'Trip In Progress' && (
+                <button
+                  onClick={() => updateRequestStatus(req.id, 'Trip Completed')}
+                  className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-2xs transition"
+                >
+                  Mark Trip Completed
+                </button>
+              )}
+              <span className="text-xs font-bold text-saffron bg-saffron-muted px-3 py-1.5 rounded-full border border-saffron/30">
+                {req.status}
+              </span>
+            </div>
           </div>
         ))}
       </div>

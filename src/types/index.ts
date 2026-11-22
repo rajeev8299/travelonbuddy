@@ -198,6 +198,8 @@ export interface TravelBuddy {
   }[];
 }
 
+export type PaymentStatus = 'Pending' | 'Successful' | 'Failed' | 'Refunded';
+
 export interface TravelRequest {
   id: string;
   bookingRef: string;
@@ -223,6 +225,8 @@ export interface TravelRequest {
   buddyGenderPreference?: 'Any' | 'Female' | 'Male';
   specialRequests?: string;
   status: BookingStatus;
+  paymentStatus?: PaymentStatus;
+  paymentTransactionId?: string;
   assignedBuddyId?: string;
   assignedBuddyName?: string;
   createdAt: string;

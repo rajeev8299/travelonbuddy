@@ -6,9 +6,14 @@ import { Calendar, Clock, MapPin, ArrowRight, Eye, XCircle } from 'lucide-react'
 export const TravelerRequestsPage: React.FC = () => {
   const { requests, updateRequestStatus } = useApp();
   const [filter, setFilter] = useState<string>('All');
+  const [rescheduleId, setRescheduleId] = useState<string | null>(null);
+  const [newDate, setNewDate] = useState<string>('');
+  const { rescheduleBooking } = useApp();
 
   const filtered = requests.filter((r) => {
-    if (filter === 'Active') return r.status !== 'Trip Completed' && r.status !== 'Cancelled';
+    if (filter === 'Upcoming') return r.status === 'Booking Confirmed' || r.status === 'Buddy Accepted';
+    if (filter === 'Pending') return r.status === 'Request Submitted' || r.status === 'Under Review' || r.status === 'Buddy Assignment Proposed';
+    if (filter === 'In Progress') return r.status === 'Trip In Progress';
     if (filter === 'Completed') return r.status === 'Trip Completed';
     if (filter === 'Cancelled') return r.status === 'Cancelled';
     return true;
@@ -27,8 +32,8 @@ export const TravelerRequestsPage: React.FC = () => {
         </div>
 
         {/* Status Filter */}
-        <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-sand-border text-xs font-semibold">
-          {['All', 'Active', 'Completed', 'Cancelled'].map((tab) => (
+        <div className="flex flex-wrap items-center gap-1.5 bg-white p-1 rounded-xl border border-sand-border text-xs font-semibold">
+          {['All', 'Upcoming', 'Pending', 'In Progress', 'Completed', 'Cancelled'].map((tab) => (
             <button
               key={tab}
               onClick={() => setFilter(tab)}
@@ -93,18 +98,35 @@ export const TravelerRequestsPage: React.FC = () => {
             </div>
 
             <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs border-t border-sand-border">
-              <span className="text-charcoal-muted text-[11px]">
-                Pickup: <strong>{req.pickupLocation}</strong>
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-charcoal-muted text-[11px]">
+                  Pickup: <strong>{req.pickupLocation}</strong>
+                </span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                  req.paymentStatus === 'Successful'
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-amber-100 text-amber-800'
+                }`}>
+                  Payment: {req.paymentStatus || 'Pending Escrow'}
+                </span>
+              </div>
 
               <div className="flex items-center gap-2">
-                {req.status !== 'Cancelled' && (
-                  <button
-                    onClick={() => updateRequestStatus(req.id, 'Cancelled')}
-                    className="px-3 py-1.5 rounded-lg border border-sand-border text-charcoal-muted hover:bg-sand text-xs font-semibold transition"
-                  >
-                    Cancel Request
-                  </button>
+                {req.status !== 'Cancelled' && req.status !== 'Trip Completed' && (
+                  <>
+                    <button
+                      onClick={() => setRescheduleId(req.id)}
+                      className="px-3 py-1.5 rounded-lg border border-sand-border text-charcoal-muted hover:bg-sand text-xs font-semibold transition"
+                    >
+                      Reschedule
+                    </button>
+                    <button
+                      onClick={() => updateRequestStatus(req.id, 'Cancelled')}
+                      className="px-3 py-1.5 rounded-lg border border-sand-border text-red-600 hover:bg-red-50 text-xs font-semibold transition"
+                    >
+                      Cancel Request
+                    </button>
+                  </>
                 )}
                 <Link
                   to={`/traveler/requests/${req.id}`}
@@ -115,6 +137,40 @@ export const TravelerRequestsPage: React.FC = () => {
                 </Link>
               </div>
             </div>
+
+            {/* In-place Reschedule Modal */}
+            {rescheduleId === req.id && (
+              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs space-y-3 mt-3 animate-fade-in">
+                <span className="font-bold text-[#1D1D1F] block">Select New Travel Date:</span>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="date"
+                    value={newDate}
+                    onChange={(e) => setNewDate(e.target.value)}
+                    className="p-2 rounded-lg bg-white border border-sand-border text-xs"
+                    required
+                  />
+                  <button
+                    onClick={() => {
+                      if (newDate) {
+                        rescheduleBooking(req.id, newDate);
+                        setRescheduleId(null);
+                        setNewDate('');
+                      }
+                    }}
+                    className="px-4 py-2 rounded-lg bg-saffron text-white font-bold"
+                  >
+                    Confirm Reschedule
+                  </button>
+                  <button
+                    onClick={() => setRescheduleId(null)}
+                    className="px-3 py-2 rounded-lg border border-sand-border text-charcoal-muted"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
