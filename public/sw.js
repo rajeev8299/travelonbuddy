@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travelonbuddy-static-v2';
+const CACHE_NAME = 'travelonbuddy-static-v3';
 
 // Dynamic base resolution from service worker registration scope
 const BASE_PATH = self.registration ? self.registration.scope : '/';
