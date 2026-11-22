@@ -70,6 +70,7 @@ export const BookingSystemPage: React.FC = () => {
 
   // Step 2: Buddy Selection
   const [selectedBuddyId, setSelectedBuddyId] = useState<string>(preselectedBuddy ? preselectedBuddy.id : '');
+  const [buddySelectionError, setBuddySelectionError] = useState<string | null>(null);
 
   // Filter buddies by destinationCity
   const cityBuddies = buddies.filter((b) => {
@@ -85,8 +86,11 @@ export const BookingSystemPage: React.FC = () => {
   const activeBuddy = buddies.find((b) => b.id === selectedBuddyId) || cityBuddies[0] || buddies[0];
 
   useEffect(() => {
-    if (!selectedBuddyId && cityBuddies.length > 0) {
+    // If the currently selected buddy doesn't match the new city, select the first valid city buddy
+    const isCurrentBuddyInCity = cityBuddies.some((b) => b.id === selectedBuddyId);
+    if (!isCurrentBuddyInCity && cityBuddies.length > 0) {
       setSelectedBuddyId(cityBuddies[0].id);
+      setBuddySelectionError(null);
     }
   }, [destinationCity]);
 
@@ -486,6 +490,14 @@ export const BookingSystemPage: React.FC = () => {
               </p>
             </div>
 
+            {/* Validation Alert */}
+            {buddySelectionError && (
+              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex items-center gap-3 text-xs animate-shake">
+                <AlertCircle className="w-5 h-5 text-[#FF5F1F] shrink-0" />
+                <span className="font-medium">{buddySelectionError}</span>
+              </div>
+            )}
+
             {/* Buddy Profile Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {cityBuddies.map((buddy) => {
@@ -493,7 +505,10 @@ export const BookingSystemPage: React.FC = () => {
                 return (
                   <div
                     key={buddy.id}
-                    onClick={() => setSelectedBuddyId(buddy.id)}
+                    onClick={() => {
+                      setSelectedBuddyId(buddy.id);
+                      setBuddySelectionError(null);
+                    }}
                     className={`p-5 rounded-3xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-4 ${
                       isSelected
                         ? 'border-[#FF5F1F] bg-[#FFF7ED] ring-1 ring-[#FF5F1F] shadow-sm'
@@ -560,7 +575,12 @@ export const BookingSystemPage: React.FC = () => {
 
                       <button
                         type="button"
-                        className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedBuddyId(buddy.id);
+                          setBuddySelectionError(null);
+                        }}
+                        className={`px-4 py-1.5 rounded-full text-xs font-semibold transition active:scale-95 ${
                           isSelected
                             ? 'bg-[#FF5F1F] text-white shadow-xs'
                             : 'bg-[#F5F5F3] text-[#1D1D1F] hover:bg-[#E8E8E6]'
@@ -577,7 +597,10 @@ export const BookingSystemPage: React.FC = () => {
             <div className="flex justify-between pt-4 border-t border-[#E8E8E6]">
               <button
                 type="button"
-                onClick={() => setStep(1)}
+                onClick={() => {
+                  setBuddySelectionError(null);
+                  setStep(1);
+                }}
                 className="px-6 py-2.5 rounded-full border border-[#E8E8E6] text-xs font-semibold text-[#1D1D1F] hover:bg-[#F5F5F3] flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -585,7 +608,14 @@ export const BookingSystemPage: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={() => setStep(3)}
+                onClick={() => {
+                  if (!selectedBuddyId) {
+                    setBuddySelectionError('Please choose a local travel companion before proceeding to customize your experience.');
+                    return;
+                  }
+                  setBuddySelectionError(null);
+                  setStep(3);
+                }}
                 className="px-8 py-3.5 rounded-full bg-[#FF5F1F] hover:bg-[#EC5800] text-white text-xs font-semibold transition-all duration-200 shadow-sm active:scale-95 flex items-center gap-2"
               >
                 <span>Continue to Customise Experience</span>
