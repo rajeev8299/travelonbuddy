@@ -40,8 +40,8 @@ export const IMAGES = {
   // Manikarnika & Cremation Ghats (Respectful wide riverside view from boat)
   manikarnikaGhat: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85',
 
-  // Sarnath: Dhamek Stupa (Genuine ancient 500 CE Buddhist monument)
-  sarnathStupa: 'https://images.unsplash.com/photo-1599818464593-945ec3792015?auto=format&fit=crop&w=1200&q=85',
+  // Sarnath: Dhamek Stupa (Genuine ancient 500 CE Buddhist monument & Bauddh Vihars)
+  sarnathStupa: getAssetUrl('images/places/sarnath-deer-park-dhamek-stupa.jpg'),
 
   // Ramnagar Fort: 18th-century Chunar sandstone fortress on the Ganga riverfront
   ramnagarFort: getAssetUrl('images/places/ramnagar-fort-varanasi.jpg'),
