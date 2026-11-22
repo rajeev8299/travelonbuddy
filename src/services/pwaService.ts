@@ -100,32 +100,62 @@ export function clearInstallDismissal(): void {
  * Register Service Worker using environment-aware base path
  */
 export function registerServiceWorker(): void {
-  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+  if (
+    typeof window === 'undefined' ||
+    !('serviceWorker' in navigator)
+  ) {
+    return
+  }
 
-  // Only register in secure contexts or localhost
-  const isLocalhost = Boolean(
+  const isLocalhost =
     window.location.hostname === 'localhost' ||
-    window.location.hostname === '[::1]' ||
-    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
-  );
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname === '[::1]'
 
-  if (window.location.protocol !== 'https:' && !isLocalhost) return;
+  if (
+    window.location.protocol !== 'https:' &&
+    !isLocalhost
+  ) {
+    return
+  }
 
-  window.addEventListener('load', () => {
-    const rawBase = import.meta.env.BASE_URL || '/';
-    const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
-    const swUrl = `${base}sw.js`;
+  const isGitHubPages =
+    window.location.hostname === 'rajeev8299.github.io'
 
+  const appBase = isGitHubPages
+    ? '/travelonbuddy/'
+    : '/'
+
+  const serviceWorkerUrl = `${appBase}sw.js`
+
+  const register = () => {
     navigator.serviceWorker
-      .register(swUrl, { scope: base })
+      .register(serviceWorkerUrl, {
+        scope: appBase,
+      })
       .then((registration) => {
-        // SW successfully registered
         if (registration.installing) {
-          console.debug('TravelOnBuddy ServiceWorker installing at scope:', registration.scope);
+          console.debug(
+            'TravelOnBuddy Service Worker installing:',
+            registration.scope
+          )
         }
       })
-      .catch((err) => {
-        console.warn('TravelOnBuddy ServiceWorker registration note:', err);
-      });
-  });
+      .catch((error) => {
+        console.warn(
+          'TravelOnBuddy Service Worker registration failed:',
+          error
+        )
+      })
+  }
+
+  if (document.readyState === 'complete') {
+    register()
+  } else {
+    window.addEventListener(
+      'load',
+      register,
+      { once: true }
+    )
+  }
 }

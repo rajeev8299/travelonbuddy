@@ -1,18 +1,44 @@
 /**
- * Asset URL helper for GitHub Pages and local development.
- * Handles prepending import.meta.env.BASE_URL when necessary.
+ * TravelOnBuddy public asset helper.
+ *
+ * Vite production bundles use relative asset URLs.
+ * Public application images must use the correct application root
+ * so they continue working on deeply nested routes.
  */
-export function getAssetUrl(path: string): string {
-  if (!path) return '';
-  // If it's already an absolute external URL or data URI, return as is
-  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:') || path.startsWith('blob:')) {
-    return path;
+
+const GITHUB_OWNER_HOST = 'rajeev8299.github.io'
+const GITHUB_PROJECT_BASE = '/travelonbuddy/'
+
+function getPublicAssetBase(): string {
+  if (
+    typeof window !== 'undefined' &&
+    window.location.hostname === GITHUB_OWNER_HOST
+  ) {
+    return GITHUB_PROJECT_BASE
   }
-  
-  const base = import.meta.env.BASE_URL || '/';
-  // Strip leading slash if base ends with a slash
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  const cleanBase = base.endsWith('/') ? base : `${base}/`;
-  
-  return `${cleanBase}${cleanPath}`;
+
+  return '/'
+}
+
+export function getAssetUrl(path: string): string {
+  if (!path) return ''
+
+  // Keep external and generated URLs unchanged.
+  if (
+    /^(https?:)?\/\//i.test(path) ||
+    path.startsWith('data:') ||
+    path.startsWith('blob:')
+  ) {
+    return path
+  }
+
+  // Do not prepend the repository path twice.
+  if (path.startsWith(GITHUB_PROJECT_BASE)) {
+    return path
+  }
+
+  const cleanPath = path.replace(/^(\.\/|\/)+/, '')
+  const base = getPublicAssetBase()
+
+  return `${base}${cleanPath}`
 }
