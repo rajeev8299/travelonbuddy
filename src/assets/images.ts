@@ -43,8 +43,8 @@ export const IMAGES = {
   // Sarnath: Dhamek Stupa (Genuine ancient 500 CE Buddhist monument & Bauddh Vihars)
   sarnathStupa: getAssetUrl('images/places/sarnath-deer-park-dhamek-stupa.jpg'),
 
-  // Ramnagar Fort: 18th-century Chunar sandstone fortress on the Ganga riverfront
-  ramnagarFort: getAssetUrl('images/places/ramnagar-fort-varanasi.jpg'),
+  // Ramnagar Fort: Authentic main entrance gate and architectural facade, Varanasi
+  ramnagarFort: getAssetUrl('images/places/ramnagar-fort-main-entrance-gate.jpg'),
 
   // Bharat Kala Bhavan Museum at Banaras Hindu University
   bharatKalaBhavanMuseum: getAssetUrl('images/places/bharat-kala-bhavan-museum.jpg'),
