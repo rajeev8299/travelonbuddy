@@ -63,7 +63,13 @@ export const AdminModulePages: React.FC<{
     reviews,
     showToast,
     language,
+    emailAuditLogs,
+    requests,
+    resendBookingConfirmationEmail,
   } = useApp();
+
+  const [selectedAuditEmail, setSelectedAuditEmail] = useState<string | null>(null);
+  const [isResendingAudit, setIsResendingAudit] = useState(false);
 
   // Package Form state
   const [pkgTitleEn, setPkgTitleEn] = useState('');
@@ -608,6 +614,130 @@ export const AdminModulePages: React.FC<{
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    );
+  }
+
+  /* 10B. EMAIL TEMPLATES & DISPATCH AUDIT */
+  if (type === 'email-templates') {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="font-serif text-2xl font-bold text-river">Automated Email System & Delivery Logs</h1>
+            <p className="text-xs text-charcoal-muted mt-1">
+              Inspection of transactional templates and idempotent delivery audit records.
+            </p>
+          </div>
+          <span className="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full border border-emerald-200 self-start sm:self-auto">
+            ✓ Automated Triggers Active
+          </span>
+        </div>
+
+        {/* Template Overview Card */}
+        <div className="bg-white p-6 rounded-2xl border border-sand-border space-y-4">
+          <div className="flex items-center justify-between border-b border-sand-border pb-3">
+            <div>
+              <span className="text-[10px] font-bold text-saffron uppercase tracking-wider block">Production Template</span>
+              <h3 className="font-serif text-base font-bold text-river">Booking Confirmed — Assigned Companion Contact Notification</h3>
+            </div>
+            <span className="text-xs font-mono font-bold bg-sand px-2.5 py-1 rounded-lg text-charcoal">
+              Subject: Your TravelOnBuddy Booking is Confirmed!
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-ivory border border-sand-border">
+              <strong className="text-river block mb-1">Trigger Condition:</strong>
+              <span className="text-charcoal-muted leading-relaxed">
+                Automatically fired when a booking achieves <strong>Booking Confirmed</strong> status after Buddy acceptance & verified escrow payment.
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-ivory border border-sand-border">
+              <strong className="text-river block mb-1">Authorized Data Payload:</strong>
+              <span className="text-charcoal-muted leading-relaxed">
+                Assigned Buddy phone number, verified email, languages, meeting point, and direct WhatsApp / tel action links.
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-ivory border border-sand-border">
+              <strong className="text-river block mb-1">Privacy & Idempotency:</strong>
+              <span className="text-charcoal-muted leading-relaxed">
+                Dispatches strictly once per booking to registered traveler email. Prevents duplicates from page reloads or status retries.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Dispatch Audit Log Table */}
+        <div className="bg-white rounded-2xl border border-sand-border overflow-hidden">
+          <div className="p-5 border-b border-sand-border flex items-center justify-between">
+            <h3 className="font-serif text-base font-bold text-river">
+              Email Dispatch Audit Trail ({emailAuditLogs.length} Records)
+            </h3>
+            <span className="text-[11px] text-charcoal-muted">Persistent Local & Gateway Ledger</span>
+          </div>
+
+          {emailAuditLogs.length === 0 ? (
+            <div className="p-8 text-center text-xs text-charcoal-muted">
+              No confirmation emails dispatched yet in this browser session. Confirm a booking from the Admin Bookings console or complete a booking to view automatic dispatch.
+            </div>
+          ) : (
+            <div className="overflow-x-auto text-xs">
+              <table className="w-full text-left">
+                <thead className="bg-sand/40 border-b border-sand-border font-bold text-river text-[11px]">
+                  <tr>
+                    <th className="p-3.5">Booking Ref</th>
+                    <th className="p-3.5">Recipient</th>
+                    <th className="p-3.5">Assigned Buddy</th>
+                    <th className="p-3.5">Provider / Ref</th>
+                    <th className="p-3.5">Timestamp</th>
+                    <th className="p-3.5">Status</th>
+                    <th className="p-3.5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-sand-border/60">
+                  {emailAuditLogs.map((log) => (
+                    <tr key={log.id} className="hover:bg-sand/20">
+                      <td className="p-3.5 font-mono font-bold text-saffron">{log.bookingRef}</td>
+                      <td className="p-3.5">
+                        <span className="font-bold text-river block">{log.recipientName}</span>
+                        <span className="text-charcoal-muted text-[11px]">{log.recipientEmail}</span>
+                      </td>
+                      <td className="p-3.5 font-medium text-river">{log.assignedBuddyName}</td>
+                      <td className="p-3.5 font-mono text-[11px] text-charcoal-light">
+                        {log.providerReference}
+                        <span className="text-[10px] text-charcoal-muted block">{log.provider}</span>
+                      </td>
+                      <td className="p-3.5 text-charcoal-muted text-[11px]">
+                        {new Date(log.sentTimestamp).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+                      </td>
+                      <td className="p-3.5">
+                        <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] ${
+                          log.emailStatus === 'Sent' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {log.emailStatus}
+                        </span>
+                      </td>
+                      <td className="p-3.5 text-right">
+                        <button
+                          disabled={isResendingAudit}
+                          onClick={async () => {
+                            setIsResendingAudit(true);
+                            await resendBookingConfirmationEmail(log.bookingId);
+                            setIsResendingAudit(false);
+                          }}
+                          className="px-3 py-1 rounded-lg bg-river hover:bg-river-deep text-white font-semibold text-[11px] transition shadow-2xs disabled:opacity-50"
+                        >
+                          Resend
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     );

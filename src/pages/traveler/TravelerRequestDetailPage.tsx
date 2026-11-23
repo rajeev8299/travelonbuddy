@@ -117,13 +117,39 @@ export const TravelerRequestDetailPage: React.FC = () => {
                 <span className="text-charcoal-light">{assignedBuddy.languages.join(', ')}</span>
               </div>
 
-              <div className="space-y-2 text-xs">
-                <span className="font-bold text-river block">Direct WhatsApp Coordination:</span>
-                <div className="p-2.5 rounded-lg bg-saffron-muted text-saffron-light border border-saffron/30 flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-saffron" />
-                  <span>+91 98390 12044 (Companion Desk)</span>
+              {req.status === 'Booking Confirmed' ? (
+                <div className="space-y-2 text-xs">
+                  <span className="font-bold text-river block">Verified Companion Direct Contact:</span>
+                  <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-semibold text-emerald-800">Phone:</span>
+                      <a
+                        href={`tel:${(assignedBuddy.contactNumber || '+91 98390 12044').replace(/[^0-9+]/g, '')}`}
+                        className="font-bold text-[#FF5F1F] font-mono hover:underline"
+                      >
+                        {assignedBuddy.contactNumber || '+91 98390 12044'}
+                      </a>
+                    </div>
+                    {assignedBuddy.allowWhatsAppContact && (
+                      <a
+                        href={`https://wa.me/${(assignedBuddy.contactNumber || '+91 98390 12044').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${assignedBuddy.name}! I am ${req.travelerName}, booking ref ${req.bookingRef} on TravelOnBuddy for ${req.startDate}.`)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-full py-1.5 rounded-lg bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-center block text-[11px] transition shadow-2xs"
+                      >
+                        Chat with {assignedBuddy.name.split(' ')[0]} on WhatsApp
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="p-3 rounded-xl bg-sand/40 border border-sand-border text-xs text-charcoal-muted">
+                  <span className="font-semibold block text-river text-[11px]">Direct Contact Notice:</span>
+                  <span className="text-[11px] leading-relaxed">
+                    Companion direct phone number is released automatically via email and this portal once your booking is officially <strong>Confirmed</strong>.
+                  </span>
+                </div>
+              )}
 
               <Link
                 to={`/buddies/${assignedBuddy.id}`}

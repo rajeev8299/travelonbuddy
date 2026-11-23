@@ -336,6 +336,10 @@ export const TRAVEL_BUDDIES_DATA: TravelBuddy[] = [
       'Harishchandra Ghat',
       'Dashashwamedh Ghat'
     ],
+    contactNumber: '+91 98390 12044',
+    contactEmail: 'anand.shukla@buddy.com',
+    allowWhatsAppContact: true,
+    allowEmailShare: true,
     reviews: [
       {
         id: 'rev-1',
@@ -391,6 +395,10 @@ export const TRAVEL_BUDDIES_DATA: TravelBuddy[] = [
       'Darbhanga Ghat',
       'Shri Kashi Vishwanath Dham'
     ],
+    contactNumber: '+91 94152 88201',
+    contactEmail: 'priya.mishra@buddy.com',
+    allowWhatsAppContact: true,
+    allowEmailShare: true,
     reviews: [
       {
         id: 'rev-3',
@@ -438,6 +446,10 @@ export const TRAVEL_BUDDIES_DATA: TravelBuddy[] = [
       'Panchganga Ghat',
       'Godowlia Market'
     ],
+    contactNumber: '+91 97920 44192',
+    contactEmail: 'rohit.varma@buddy.com',
+    allowWhatsAppContact: true,
+    allowEmailShare: true,
     reviews: [
       {
         id: 'rev-4',
@@ -484,6 +496,10 @@ export const TRAVEL_BUDDIES_DATA: TravelBuddy[] = [
       'Sarnath Deer Park & Stupa',
       'Adi Keshav Ghat'
     ],
+    contactNumber: '+91 94501 33219',
+    contactEmail: 'sunita.tripathi@buddy.com',
+    allowWhatsAppContact: true,
+    allowEmailShare: true,
     reviews: [
       {
         id: 'rev-5',
@@ -530,6 +546,10 @@ export const TRAVEL_BUDDIES_DATA: TravelBuddy[] = [
       'Panchganga Ghat',
       'Peeli Kothi Handlooms'
     ],
+    contactNumber: '+91 98891 76203',
+    contactEmail: 'kabir.ansari@buddy.com',
+    allowWhatsAppContact: true,
+    allowEmailShare: true,
     reviews: [
       {
         id: 'rev-6',
@@ -576,6 +596,10 @@ export const TRAVEL_BUDDIES_DATA: TravelBuddy[] = [
       'Dashashwamedh Ghat',
       'Manikarnika View'
     ],
+    contactNumber: '+91 93351 90442',
+    contactEmail: 'neha.pandey@buddy.com',
+    allowWhatsAppContact: true,
+    allowEmailShare: true,
     reviews: [
       {
         id: 'rev-7',
@@ -622,6 +646,10 @@ export const TRAVEL_BUDDIES_DATA: TravelBuddy[] = [
       'City Palace Jaipur',
       'Johari Bazaar'
     ],
+    contactNumber: '+91 98290 55102',
+    contactEmail: 'ranveer.shekhawat@buddy.com',
+    allowWhatsAppContact: true,
+    allowEmailShare: true,
     reviews: [
       {
         id: 'rev-jaipur-1',
@@ -668,6 +696,10 @@ export const TRAVEL_BUDDIES_DATA: TravelBuddy[] = [
       'Jal Mahal Viewpoint',
       'Albert Hall Museum'
     ],
+    contactNumber: '+91 97841 22904',
+    contactEmail: 'ananya.rathore@buddy.com',
+    allowWhatsAppContact: true,
+    allowEmailShare: true,
     reviews: [
       {
         id: 'rev-jaipur-2',

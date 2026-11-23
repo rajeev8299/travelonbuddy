@@ -188,6 +188,10 @@ export interface TravelBuddy {
   availableTimeSlots?: string[];
   servicesOffered?: string[];
   placesCovered?: string[];
+  contactNumber?: string;
+  contactEmail?: string;
+  allowWhatsAppContact?: boolean;
+  allowEmailShare?: boolean;
   reviews?: {
     id: string;
     travelerName: string;
@@ -366,4 +370,24 @@ export interface BuddyDocument {
   status: 'Approved' | 'Under Review' | 'Rejected' | 'Not Submitted';
   uploadedAt: string;
   rejectionReason?: string;
+}
+
+export type EmailDeliveryStatus = 'Sent' | 'Failed' | 'Pending';
+
+export interface BookingEmailAuditLog {
+  id: string;
+  bookingId: string;
+  bookingRef: string;
+  recipientEmail: string;
+  recipientName: string;
+  assignedBuddyId: string;
+  assignedBuddyName: string;
+  notificationType: 'BOOKING_CONFIRMATION_BUDDY_CONTACT';
+  deliveryAttempt: number;
+  provider: 'Direct-SMTP / Resend Server Gateway' | 'Browser-Client Email Dispatcher';
+  providerReference: string;
+  emailStatus: EmailDeliveryStatus;
+  sentTimestamp: string;
+  subject: string;
+  error?: string;
 }

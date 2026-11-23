@@ -12,15 +12,18 @@ import {
   MapPin,
   Clock,
   ArrowRight,
+  Mail,
+  Send,
 } from 'lucide-react';
 import { TravelRequest } from '../../types';
 
 export const AdminBookingsPage: React.FC = () => {
-  const { requests, buddies, updateRequestStatus, showToast } = useApp();
+  const { requests, buddies, updateRequestStatus, showToast, emailAuditLogs, resendBookingConfirmationEmail } = useApp();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedReq, setSelectedReq] = useState<TravelRequest | null>(null);
   const [assigneeId, setAssigneeId] = useState('');
+  const [isResending, setIsResending] = useState(false);
 
   const filtered = requests.filter((r) => {
     const matchesSearch =
@@ -254,6 +257,49 @@ export const AdminBookingsPage: React.FC = () => {
                     <XCircle className="w-4 h-4" />
                     <span>Reject / Cancel</span>
                   </button>
+                </div>
+
+                {/* Email Confirmation Status & Resend */}
+                <div className="mt-3 p-3 rounded-xl bg-sand/30 border border-sand-border space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-river flex items-center gap-1.5 text-[11px]">
+                      <Mail className="w-3.5 h-3.5 text-saffron" />
+                      Companion Contact Email Status:
+                    </span>
+                    {(() => {
+                      const log = emailAuditLogs.find((l) => l.bookingId === selectedReq.id && l.emailStatus === 'Sent');
+                      return log ? (
+                        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+                          Sent ({log.sentTimestamp.split('T')[0]})
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-bold text-charcoal-muted bg-sand px-2 py-0.5 rounded-full">
+                          {selectedReq.status === 'Booking Confirmed' ? 'Not Dispatched / Pending' : 'Trigger Condition Unmet'}
+                        </span>
+                      );
+                    })()}
+                  </div>
+
+                  {selectedReq.status === 'Booking Confirmed' && (
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-[10px] text-charcoal-muted">
+                        Recipient: <strong>{selectedReq.travelerEmail}</strong>
+                      </span>
+                      <button
+                        type="button"
+                        disabled={isResending}
+                        onClick={async () => {
+                          setIsResending(true);
+                          await resendBookingConfirmationEmail(selectedReq.id);
+                          setIsResending(false);
+                        }}
+                        className="px-3 py-1 rounded-lg bg-river hover:bg-river-deep text-white text-[11px] font-semibold transition flex items-center gap-1.5 disabled:opacity-50"
+                      >
+                        <Send className="w-3 h-3" />
+                        <span>{isResending ? 'Sending...' : 'Resend Email'}</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 

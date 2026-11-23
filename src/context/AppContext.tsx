@@ -15,6 +15,7 @@ import {
   TravelPackage,
   BuddyServiceItem,
   BuddyDocument,
+  BookingEmailAuditLog,
 } from '../types';
 import { MOCK_REQUESTS_DATA, DESTINATIONS_DATA, TRAVEL_BUDDIES_DATA, EXPERIENCES_DATA } from '../data/mockData';
 import { EVENTS_DATA } from '../data/eventsData';
@@ -27,6 +28,11 @@ import {
   getKolkataDateString,
   OFFICIAL_SYNC_SOURCES,
 } from '../services/eventSyncService';
+import {
+  sendBookingConfirmationEmail,
+  getEmailAuditLogs,
+  hasConfirmationEmailBeenSent,
+} from '../services/emailService';
 
 export interface AuthUser {
   id: string;
@@ -116,6 +122,10 @@ interface AppContextType {
   deleteBuddyService: (id: string) => void;
   buddyDocuments: BuddyDocument[];
   updateBuddyDocumentStatus: (id: string, status: BuddyDocument['status'], reason?: string) => void;
+
+  // Email Audit & Confirmation Dispatch
+  emailAuditLogs: BookingEmailAuditLog[];
+  resendBookingConfirmationEmail: (bookingId: string) => Promise<{ success: boolean; message?: string }>;
 
   // Toast / notification helper
   toastMessage: string | null;
@@ -455,12 +465,81 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return created;
   };
 
+  const [emailAuditLogs, setEmailAuditLogs] = useState<BookingEmailAuditLog[]>(() => {
+    return getEmailAuditLogs();
+  });
+
+  const refreshEmailLogs = () => {
+    setEmailAuditLogs(getEmailAuditLogs());
+  };
+
+  const attemptAutomaticConfirmationEmail = async (booking: TravelRequest) => {
+    // Check if genuinely confirmed
+    if (booking.status !== 'Booking Confirmed') return;
+
+    // Check idempotency: already sent successfully?
+    if (hasConfirmationEmailBeenSent(booking.id)) {
+      console.info(`[AppContext Email Trigger] Confirmation email already sent for ${booking.bookingRef}.`);
+      return;
+    }
+
+    // Find assigned buddy
+    const buddy = buddies.find((b) => b.id === booking.assignedBuddyId);
+    if (!buddy) {
+      console.warn(`[AppContext Email Trigger] Cannot send confirmation email: assigned buddy not found for ${booking.assignedBuddyId}`);
+      return;
+    }
+
+    try {
+      const result = await sendBookingConfirmationEmail(booking, buddy);
+      refreshEmailLogs();
+      if (result.success) {
+        showToast(`Confirmation email dispatched with ${buddy.name}'s contact details to ${booking.travelerEmail}`);
+      }
+    } catch (err) {
+      console.error('[AppContext Email Trigger] Automatic dispatch error:', err);
+      refreshEmailLogs();
+    }
+  };
+
+  const resendBookingConfirmationEmail = async (bookingId: string) => {
+    const booking = requests.find((r) => r.id === bookingId);
+    if (!booking) {
+      return { success: false, message: 'Booking not found.' };
+    }
+    if (booking.status !== 'Booking Confirmed') {
+      return {
+        success: false,
+        message: `Cannot send companion contact email for unconfirmed booking status: "${booking.status}".`,
+      };
+    }
+    const buddy = buddies.find((b) => b.id === booking.assignedBuddyId);
+    if (!buddy) {
+      return {
+        success: false,
+        message: 'No assigned buddy found for this booking.',
+      };
+    }
+
+    const result = await sendBookingConfirmationEmail(booking, buddy, { isResend: true });
+    refreshEmailLogs();
+    if (result.success) {
+      showToast(`Confirmation email re-dispatched to ${booking.travelerEmail}`);
+      return { success: true, message: `Email delivered via ${result.provider}. Ref: ${result.messageId}` };
+    } else {
+      showToast(`Email delivery failed: ${result.error || 'Provider error'}`);
+      return { success: false, message: result.error || 'Email dispatch failed' };
+    }
+  };
+
   const updateRequestStatus = (
     id: string,
     status: TravelRequest['status'],
     buddyId?: string,
     buddyName?: string
   ) => {
+    let targetBooking: TravelRequest | undefined = undefined;
+
     setRequests(prev =>
       prev.map(r => {
         if (r.id !== id) return r;
@@ -471,16 +550,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           time: 'Just now',
           status: 'completed',
         });
-        return {
+        const updated: TravelRequest = {
           ...r,
           status,
           assignedBuddyId: buddyId || r.assignedBuddyId,
           assignedBuddyName: buddyName || r.assignedBuddyName,
           timeline: updatedTimeline,
         };
+        targetBooking = updated;
+        return updated;
       })
     );
     showToast(`Request updated to "${status}"`);
+
+    // Automatic trigger check: if transitioned to 'Booking Confirmed', dispatch email
+    if (status === 'Booking Confirmed' && targetBooking) {
+      attemptAutomaticConfirmationEmail(targetBooking);
+    }
   };
 
   const updatePaymentStatus = (
@@ -488,6 +574,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     paymentStatus: 'Pending' | 'Successful' | 'Failed' | 'Refunded',
     transactionId?: string
   ) => {
+    let targetBooking: TravelRequest | undefined = undefined;
+
     setRequests(prev =>
       prev.map(r => {
         if (r.id !== id) return r;
@@ -498,15 +586,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           time: 'Just now',
           status: 'completed',
         });
-        return {
+        const updated: TravelRequest = {
           ...r,
           paymentStatus,
           paymentTransactionId: transactionId || r.paymentTransactionId,
           timeline: updatedTimeline,
         };
+        targetBooking = updated;
+        return updated;
       })
     );
     showToast(`Payment updated: ${paymentStatus}`);
+
+    // If payment succeeds and the booking is already confirmed, verify if email needs to be sent
+    if (paymentStatus === 'Successful' && targetBooking && (targetBooking as TravelRequest).status === 'Booking Confirmed') {
+      attemptAutomaticConfirmationEmail(targetBooking);
+    }
   };
 
   const rescheduleBooking = (
@@ -924,6 +1019,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         deleteBuddyService,
         buddyDocuments,
         updateBuddyDocumentStatus,
+        emailAuditLogs,
+        resendBookingConfirmationEmail,
         toastMessage,
         showToast,
       }}
