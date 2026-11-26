@@ -33,6 +33,9 @@ import {
   getEmailAuditLogs,
   hasConfirmationEmailBeenSent,
 } from '../services/emailService';
+import { db } from '../services/databaseService';
+import { authService } from '../services/authService';
+import { isSupabaseConfigured } from '../services/supabase';
 
 export interface AuthUser {
   id: string;
@@ -462,6 +465,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setRequests(prev => [created, ...prev]);
     showToast(`Request ${created.bookingRef} successfully submitted for review!`);
+
+    // Asynchronously save to Supabase if configured
+    if (isSupabaseConfigured()) {
+      db.bookings.create(created).catch((err) => {
+        console.error('Failed to sync booking to Supabase:', err);
+      });
+    }
+
     return created;
   };
 
@@ -566,6 +577,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Automatic trigger check: if transitioned to 'Booking Confirmed', dispatch email
     if (status === 'Booking Confirmed' && targetBooking) {
       attemptAutomaticConfirmationEmail(targetBooking);
+    }
+
+    // Persist status change to Supabase if configured
+    if (isSupabaseConfigured() && targetBooking) {
+      const tb = targetBooking as TravelRequest;
+      db.bookings.updateStatus(id, status, tb.timeline, buddyId, buddyName).catch((err) => {
+        console.error('Failed to update booking status in Supabase:', err);
+      });
     }
   };
 

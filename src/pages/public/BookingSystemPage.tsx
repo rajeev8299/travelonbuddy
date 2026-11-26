@@ -961,30 +961,24 @@ export const BookingSystemPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Payment Integration Simulation Card */}
+            {/* Payment Gateway Notice (Pending Integration) */}
             <div className="max-w-md mx-auto p-5 rounded-3xl bg-[#FAFAF8] border border-[#E8E8E6] text-left text-xs space-y-3">
               <div className="flex items-center justify-between pb-2 border-b border-[#E8E8E6]">
                 <span className="font-bold text-[#1D1D1F] flex items-center gap-1.5">
                   <CreditCard className="w-4 h-4 text-[#FF5F1F]" />
-                  Secure Payment Gateway
+                  Payment Gateway Integration
                 </span>
-                <span className="text-[11px] font-semibold text-[#FF5F1F] bg-[#FFF7ED] px-2.5 py-0.5 rounded-full border border-[#FF5F1F]/20">
-                  {pricing.formattedTotal}
+                <span className="text-[11px] font-semibold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200">
+                  Pending Gateway Activation
                 </span>
               </div>
               <p className="text-[11px] text-[#6E6E73] font-light leading-relaxed">
-                TravelOnBuddy supports 100% escrow-backed secure payments via UPI, Credit/Debit Cards, and Netbanking. Funds are only disbursed following verified trip completion.
+                Online payment processing via Razorpay/UPI/Cards is currently pending merchant onboarding and will be activated in an upcoming update. Your booking request has been safely recorded in the platform with payment status: <strong>Pending Escrow</strong>.
               </p>
-
-              <button
-                type="button"
-                onClick={handleSimulatePayment}
-                disabled={paymentProcessing}
-                className="w-full py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition flex items-center justify-center gap-2 shadow-xs active:scale-95 disabled:opacity-50"
-              >
-                <CreditCard className="w-4 h-4" />
-                <span>{paymentProcessing ? 'Processing Escrow Security...' : 'Authorize Escrow Payment (Simulation)'}</span>
-              </button>
+              <div className="p-3 rounded-2xl bg-white border border-[#E8E8E6] flex items-center justify-between text-xs">
+                <span className="text-[#6E6E73]">Total Payable upon Activation:</span>
+                <strong className="text-[#1D1D1F] font-bold">{pricing.formattedTotal}</strong>
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">

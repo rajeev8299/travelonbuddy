@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { getAssetUrl } from '../../utils/assetHelper';
+import { isSupabaseConfigured } from '../../services/supabase';
+import { authService } from '../../services/authService';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -10,23 +12,63 @@ export const RegisterPage: React.FC = () => {
   const [accountType, setAccountType] = useState<'traveler' | 'buddy'>('traveler');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [expertise, setExpertise] = useState('Ghat Lore & Morning Boat Rides');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setIsLoading(true);
 
-    // In this workflow, only travelers can self-activate immediate dashboards;
-    // Buddy registrations submit an application for admin review, or activate testing access
-    if (accountType === 'traveler') {
-      showToast('Traveler account registered! Welcome to Kashi.');
-      // Auto-authenticate as traveler
-      login(email || 'traveler@example.com', 'password123');
-      navigate('/traveler/dashboard');
-    } else {
-      showToast('Buddy application submitted for Varanasi operations review!');
-      login(email || 'anand.shukla@buddy.com', 'password123');
-      navigate('/buddy/dashboard');
+    try {
+      if (isSupabaseConfigured()) {
+        const regRes = await authService.register(
+          email,
+          password || 'TravelOnBuddy@2026',
+          fullName,
+          accountType
+        );
+
+        if (!regRes.success) {
+          setError(regRes.message || 'Registration could not be completed.');
+          setIsLoading(false);
+          return;
+        }
+
+        showToast(
+          accountType === 'traveler'
+            ? 'Account created successfully! Welcome to TravelOnBuddy.'
+            : 'Application submitted! Operations team will review your profile.'
+        );
+
+        // Auto authenticate locally as well
+        login(email, password || 'TravelOnBuddy@2026');
+        if (accountType === 'traveler') {
+          navigate('/traveler/dashboard');
+        } else {
+          navigate('/buddy/dashboard');
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      // Seamless local demonstration mode fallback
+      if (accountType === 'traveler') {
+        showToast('Traveler account registered! Welcome to Kashi.');
+        login(email || 'traveler@example.com', 'password123');
+        navigate('/traveler/dashboard');
+      } else {
+        showToast('Buddy application submitted for Varanasi operations review!');
+        login(email || 'anand.shukla@buddy.com', 'password123');
+        navigate('/buddy/dashboard');
+      }
+    } catch {
+      setError('An error occurred during registration. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,6 +90,13 @@ export const RegisterPage: React.FC = () => {
             {t.auth.joinDesc}
           </p>
         </div>
+
+        {error && (
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
 
         {/* Account Type Selector */}
         <div className="grid grid-cols-2 gap-3">
@@ -99,6 +148,19 @@ export const RegisterPage: React.FC = () => {
           </div>
 
           <div className="space-y-1.5">
+            <label className="font-bold text-river block">{t.auth.passwordLabel}</label>
+            <input
+              type="password"
+              placeholder="Create a strong password (min 6 characters)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 rounded-xl border border-sand-border focus:outline-none focus:border-saffron"
+              minLength={6}
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
             <label className="font-bold text-river block">{t.auth.phoneLabel}</label>
             <input
               type="tel"
@@ -129,14 +191,24 @@ export const RegisterPage: React.FC = () => {
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-saffron text-white font-bold hover:bg-saffron-light transition shadow flex items-center justify-center gap-2"
+              disabled={isLoading}
+              className="w-full py-3 rounded-xl bg-saffron text-white font-bold hover:bg-saffron-light transition shadow flex items-center justify-center gap-2 disabled:opacity-70"
             >
-              <span>
-                {accountType === 'traveler'
-                  ? (language === 'HI' ? 'यात्री खाता बनाएं' : 'Create Traveler Account')
-                  : (language === 'HI' ? 'बडी आवेदन जमा करें' : 'Submit Buddy Application')}
-              </span>
-              <ArrowRight className="w-4 h-4" />
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Processing...</span>
+                </>
+              ) : (
+                <>
+                  <span>
+                    {accountType === 'traveler'
+                      ? (language === 'HI' ? 'यात्री खाता बनाएं' : 'Create Traveler Account')
+                      : (language === 'HI' ? 'बडी आवेदन जमा करें' : 'Submit Buddy Application')}
+                  </span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </div>
         </form>
