@@ -13,7 +13,7 @@ export function getKolkataDateString(date: Date = new Date()): string {
       day: '2-digit',
     });
     return formatter.format(date);
-  } catch (err) {
+  } catch {
     // Fallback to manual IST offset calculation (+5.5 hours)
     const istOffsetMs = 5.5 * 60 * 60 * 1000;
     const istDate = new Date(date.getTime() + istOffsetMs);

@@ -87,7 +87,8 @@ const ProtectedRoleRoute: React.FC<{
 
 export const AppRoutes: React.FC = () => {
   return (
-    <Routes>
+    <Suspense fallback={<RouteLoadingFallback />}>
+      <Routes>
       {/* Public Pages wrapped in MainLayout */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
@@ -193,6 +194,7 @@ export const AppRoutes: React.FC = () => {
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 };

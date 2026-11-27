@@ -40,6 +40,22 @@ export default defineConfig(({ command }) => {
               if (id.includes('lucide-react')) {
                 return 'vendor-icons'
               }
+
+              if (id.includes('@supabase')) {
+                return 'vendor-supabase'
+              }
+
+              if (id.includes('framer-motion')) {
+                return 'vendor-motion'
+              }
+
+              if (
+                id.includes('react-hook-form') ||
+                id.includes('@hookform/resolvers') ||
+                id.includes('zod')
+              ) {
+                return 'vendor-forms'
+              }
             }
           },
         },

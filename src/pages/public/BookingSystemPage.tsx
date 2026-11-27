@@ -3,22 +3,14 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { BookingCategory } from '../../types';
 import {
-  MapPin,
-  Calendar,
-  Clock,
-  User,
   ShieldCheck,
   CheckCircle2,
   ArrowRight,
   ArrowLeft,
   Check,
-  Users,
-  Compass,
   Star,
   CreditCard,
   AlertCircle,
-  Phone,
-  Mail,
   Sparkles,
 } from 'lucide-react';
 

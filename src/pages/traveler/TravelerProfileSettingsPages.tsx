@@ -18,8 +18,6 @@ import {
   MessageSquare,
   AlertCircle,
   HelpCircle,
-  Send,
-  Calendar,
   Compass,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -39,7 +37,6 @@ export const TravelerProfileSettingsPages: React.FC<{
     toggleSavedItem,
     buddies,
     destinations,
-    experiences,
     packages,
     reviews,
     addReview,
@@ -53,7 +50,6 @@ export const TravelerProfileSettingsPages: React.FC<{
   const [email, setEmail] = useState(currentUser?.email || 'traveler@example.com');
   const [phone, setPhone] = useState('+91 98112 45091');
   const [city, setCity] = useState('New Delhi, India');
-  const [languagePref, setLanguagePref] = useState('English & Hindi');
   const [bio, setBio] = useState('Passionate cultural explorer with deep love for ancient Indian spiritual traditions.');
 
   // Password / Security Form
