@@ -11,6 +11,10 @@ import {
   BuddyDocument,
   BuddyServiceItem,
   TravelEvent,
+  BookingCategory,
+  BookingStatus,
+  PaymentStatus,
+  BuddyApplicationStatus,
 } from '../types';
 
 /**
@@ -161,8 +165,75 @@ export const db = {
   },
 };
 
+// Raw database row shapes from Supabase (snake_case)
+interface DbBookingRow {
+  id: string;
+  booking_ref: string;
+  destination: string;
+  start_date: string;
+  end_date: string;
+  start_time?: string;
+  is_multi_day: boolean;
+  category: string;
+  duration_text: string;
+  traveler_count: number;
+  adults_count?: number;
+  children_count?: number;
+  traveler_country_city?: string;
+  traveler_name: string;
+  traveler_email: string;
+  traveler_phone: string;
+  pickup_location: string;
+  preferred_language: string;
+  interests: string[];
+  selected_places?: string[];
+  crowd_preference?: string;
+  buddy_gender_preference?: string;
+  special_requests?: string;
+  status: string;
+  payment_status?: string;
+  payment_transaction_id?: string;
+  assigned_buddy_id?: string;
+  assigned_buddy_name?: string;
+  created_at: string;
+  price_breakdown?: TravelRequest['priceBreakdown'];
+  estimated_price_display: string;
+  timeline: TravelRequest['timeline'];
+}
+
+interface DbBuddyRow {
+  id: string;
+  name: string;
+  title: string;
+  avatar: string;
+  bio: string;
+  languages: string[];
+  expertise: string[];
+  experience_years: number;
+  rating_demo: number | string;
+  total_trips_demo: number;
+  status: string;
+  gender: string;
+  availability_note: string;
+  verified_badges: string[];
+  native_of: string;
+  speciality_ghats: string[];
+  hourly_rate: number | string;
+  half_day_rate: number | string;
+  full_day_rate: number | string;
+  multi_day_daily_rate: number | string;
+  max_group_size: number;
+  available_time_slots?: string[];
+  services_offered?: string[];
+  places_covered?: string[];
+  contact_number?: string;
+  contact_email?: string;
+  allow_whatsapp_contact?: boolean;
+  allow_email_share?: boolean;
+}
+
 // Data mappers between snake_case database schema and camelCase TypeScript models
-function mapDbBookingToApp(row: any): TravelRequest {
+function mapDbBookingToApp(row: DbBookingRow): TravelRequest {
   return {
     id: row.id,
     bookingRef: row.booking_ref,
@@ -171,7 +242,7 @@ function mapDbBookingToApp(row: any): TravelRequest {
     endDate: row.end_date,
     startTime: row.start_time,
     isMultiDay: row.is_multi_day,
-    category: row.category,
+    category: row.category as BookingCategory,
     durationText: row.duration_text,
     travelerCount: row.traveler_count,
     adultsCount: row.adults_count,
@@ -184,11 +255,11 @@ function mapDbBookingToApp(row: any): TravelRequest {
     preferredLanguage: row.preferred_language,
     interests: row.interests || [],
     selectedPlaces: row.selected_places || [],
-    crowdPreference: row.crowd_preference || 'Balanced Experiences',
-    buddyGenderPreference: row.buddy_gender_preference || 'Any',
+    crowdPreference: (row.crowd_preference || 'Balanced Experiences') as TravelRequest['crowdPreference'],
+    buddyGenderPreference: (row.buddy_gender_preference || 'Any') as TravelRequest['buddyGenderPreference'],
     specialRequests: row.special_requests,
-    status: row.status,
-    paymentStatus: row.payment_status,
+    status: row.status as BookingStatus,
+    paymentStatus: row.payment_status as PaymentStatus | undefined,
     paymentTransactionId: row.payment_transaction_id,
     assignedBuddyId: row.assigned_buddy_id,
     assignedBuddyName: row.assigned_buddy_name,
@@ -237,7 +308,7 @@ function mapAppBookingToDb(b: TravelRequest): Record<string, unknown> {
   };
 }
 
-function mapDbBuddyToApp(row: any): TravelBuddy {
+function mapDbBuddyToApp(row: DbBuddyRow): TravelBuddy {
   return {
     id: row.id,
     name: row.name,
@@ -249,8 +320,8 @@ function mapDbBuddyToApp(row: any): TravelBuddy {
     experienceYears: row.experience_years,
     ratingDemo: Number(row.rating_demo),
     totalTripsDemo: row.total_trips_demo,
-    status: row.status,
-    gender: row.gender,
+    status: row.status as BuddyApplicationStatus,
+    gender: row.gender as TravelBuddy['gender'],
     availabilityNote: row.availability_note,
     verifiedBadges: row.verified_badges || [],
     nativeOf: row.native_of,

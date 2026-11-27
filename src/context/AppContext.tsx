@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {
   TravelRequest,
   Destination,
@@ -345,26 +345,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setActiveRoleState(role);
   };
 
-  const login = (emailInput: string, passwordInput: string) => {
-    const trimmedEmail = emailInput.trim().toLowerCase();
-    
+  const login = useCallback((emailInput: string, passwordInput: string) => {
+    // Sanitize and enforce max input lengths to prevent DoS / injection attempts
+    const trimmedEmail = emailInput.trim().toLowerCase().slice(0, 254); // RFC 5321 max email length
+    const trimmedPassword = passwordInput ? passwordInput.slice(0, 128) : '';
+
     // Validate credentials against trusted database
     const matchedUser = TRUSTED_USERS.find(
       (u) => u.email.toLowerCase() === trimmedEmail
     );
 
-    if (!matchedUser) {
-      return {
-        success: false,
-        message: 'Invalid email address. Please check your credentials.',
-      };
-    }
-
-    // Check password (demonstration accepts password123 or any non-empty input for verified accounts)
-    if (!passwordInput || passwordInput.trim() === '') {
+    // Always validate password length before returning, to prevent timing-based email enumeration
+    if (!trimmedPassword || trimmedPassword.trim() === '') {
       return {
         success: false,
         message: 'Please enter a valid password.',
+      };
+    }
+
+    if (!matchedUser) {
+      return {
+        success: false,
+        message: 'Invalid email or password. Please check your credentials.',
       };
     }
 
@@ -383,7 +385,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       success: true,
       user: matchedUser,
     };
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const logout = () => {
     setCurrentUser(null);
