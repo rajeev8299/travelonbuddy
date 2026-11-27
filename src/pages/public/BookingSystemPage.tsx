@@ -92,7 +92,8 @@ export const BookingSystemPage: React.FC = () => {
       setSelectedBuddyId(cityBuddies[0].id);
       setBuddySelectionError(null);
     }
-  }, [destinationCity]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destinationCity, cityBuddies.length]);
 
   // Step 3: Customisation & Activities
   const varanasiActivities = [

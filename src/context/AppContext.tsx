@@ -393,6 +393,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch (err) {
       console.error(err);
     }
+    // Also sign out from Supabase if configured
+    if (isSupabaseConfigured()) {
+      authService.logout().catch((err) => console.error('Supabase logout error:', err));
+    }
     showToast('You have been logged out.');
   };
 
@@ -549,10 +553,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     buddyId?: string,
     buddyName?: string
   ) => {
-    let targetBooking: TravelRequest | undefined = undefined;
-
-    setRequests(prev =>
-      prev.map(r => {
+    setRequests(prev => {
+      const next = prev.map(r => {
         if (r.id !== id) return r;
         const updatedTimeline = [...r.timeline];
         updatedTimeline.push({
@@ -561,31 +563,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           time: 'Just now',
           status: 'completed',
         });
-        const updated: TravelRequest = {
+        return {
           ...r,
           status,
           assignedBuddyId: buddyId || r.assignedBuddyId,
           assignedBuddyName: buddyName || r.assignedBuddyName,
           timeline: updatedTimeline,
-        };
-        targetBooking = updated;
-        return updated;
-      })
-    );
-    showToast(`Request updated to "${status}"`);
-
-    // Automatic trigger check: if transitioned to 'Booking Confirmed', dispatch email
-    if (status === 'Booking Confirmed' && targetBooking) {
-      attemptAutomaticConfirmationEmail(targetBooking);
-    }
-
-    // Persist status change to Supabase if configured
-    if (isSupabaseConfigured() && targetBooking) {
-      const tb = targetBooking as TravelRequest;
-      db.bookings.updateStatus(id, status, tb.timeline, buddyId, buddyName).catch((err) => {
-        console.error('Failed to update booking status in Supabase:', err);
+        } as TravelRequest;
       });
-    }
+
+      // Find the updated booking within the same state update to avoid stale closure
+      const targetBooking = next.find(r => r.id === id);
+
+      // Automatic trigger check: if transitioned to 'Booking Confirmed', dispatch email
+      if (status === 'Booking Confirmed' && targetBooking) {
+        // Use setTimeout to defer outside the setState callback
+        setTimeout(() => attemptAutomaticConfirmationEmail(targetBooking), 0);
+      }
+
+      // Persist status change to Supabase if configured
+      if (isSupabaseConfigured() && targetBooking) {
+        db.bookings.updateStatus(id, status, targetBooking.timeline, buddyId, buddyName).catch((err) => {
+          console.error('Failed to update booking status in Supabase:', err);
+        });
+      }
+
+      return next;
+    });
+    showToast(`Request updated to "${status}"`);
   };
 
   const updatePaymentStatus = (

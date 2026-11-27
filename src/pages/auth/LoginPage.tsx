@@ -9,8 +9,8 @@ import { authService } from '../../services/authService';
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { login, t, showToast } = useApp();
-  const [email, setEmail] = useState('traveler@example.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);

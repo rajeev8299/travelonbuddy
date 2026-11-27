@@ -76,7 +76,7 @@ export const Navbar: React.FC = () => {
             className="h-7 sm:h-8.5 w-auto object-contain transition-transform duration-300 ease-out group-hover:scale-105 shrink-0"
           />
           <span className="font-sans text-[14px] sm:text-base font-semibold tracking-tight text-[#1D1D1F] select-none truncate">
-            TravelOn<span className="text-[#FF5F1F]">Buddies</span>
+            TravelOn<span className="text-[#FF5F1F]">Buddy</span>
           </span>
         </Link>
 

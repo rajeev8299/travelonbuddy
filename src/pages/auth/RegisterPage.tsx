@@ -25,9 +25,15 @@ export const RegisterPage: React.FC = () => {
 
     try {
       if (isSupabaseConfigured()) {
+        if (!password || password.length < 6) {
+          setError('Please create a password with at least 6 characters.');
+          setIsLoading(false);
+          return;
+        }
+
         const regRes = await authService.register(
           email,
-          password || 'TravelOnBuddy@2026',
+          password,
           fullName,
           accountType
         );
@@ -44,8 +50,8 @@ export const RegisterPage: React.FC = () => {
             : 'Application submitted! Operations team will review your profile.'
         );
 
-        // Auto authenticate locally as well
-        login(email, password || 'TravelOnBuddy@2026');
+        // After Supabase registration, navigate directly (Supabase session is set)
+        // The AppContext auth will be synced via authService.getCurrentUser on next load
         if (accountType === 'traveler') {
           navigate('/traveler/dashboard');
         } else {
@@ -57,12 +63,19 @@ export const RegisterPage: React.FC = () => {
 
       // Seamless local demonstration mode fallback
       if (accountType === 'traveler') {
-        showToast('Traveler account registered! Welcome to Kashi.');
-        login(email || 'traveler@example.com', 'password123');
-        navigate('/traveler/dashboard');
+        const result = login(email || 'traveler@example.com', password || 'password123');
+        if (result.success) {
+          showToast('Traveler account registered! Welcome to Kashi.');
+          navigate('/traveler/dashboard');
+        } else {
+          // New user not in trusted list; create a session anyway in demo mode
+          showToast('Traveler account registered! Welcome to Kashi.');
+          login('traveler@example.com', 'password123');
+          navigate('/traveler/dashboard');
+        }
       } else {
         showToast('Buddy application submitted for Varanasi operations review!');
-        login(email || 'anand.shukla@buddy.com', 'password123');
+        login('anand.shukla@buddy.com', 'password123');
         navigate('/buddy/dashboard');
       }
     } catch {
