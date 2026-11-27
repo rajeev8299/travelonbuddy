@@ -218,23 +218,23 @@ export const TravelBookingSearchBar: React.FC = () => {
         <div className="hidden lg:block w-[1px] h-9 bg-[#E8E8E6]" />
 
         {/* FIELD 4: TRAVELERS NUMBER SELECTOR */}
-        <div className="lg:w-[20%] flex items-center justify-between gap-2 px-4 py-2.5 rounded-2xl lg:rounded-full hover:bg-[#FAFAF8] transition-colors border border-transparent hover:border-[#E8E8E6]/60">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-full bg-[#FFF7ED] flex items-center justify-center text-[#FF5F1F] shrink-0">
+        <div className="lg:min-w-[235px] lg:shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 rounded-2xl lg:rounded-full hover:bg-[#FAFAF8] transition-colors border border-transparent hover:border-[#E8E8E6]/60">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FFF7ED] flex items-center justify-center text-[#FF5F1F] shrink-0">
               <Users className="w-4 h-4" />
             </div>
-            <div className="text-left min-w-0">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-[#86868B] block leading-tight">
+            <div className="text-left min-w-0 flex-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[#86868B] block leading-tight whitespace-nowrap">
                 {language === 'HI' ? 'यात्री संख्या' : 'Travelers'}
               </label>
-              <span className="text-xs sm:text-sm font-semibold text-[#1D1D1F] block mt-0.5 truncate leading-snug">
+              <span className="text-xs sm:text-sm font-semibold text-[#1D1D1F] block mt-0.5 leading-snug whitespace-nowrap">
                 {travelers} {travelers === 1 ? (language === 'HI' ? 'व्यक्ति' : 'Person') : (language === 'HI' ? 'व्यक्ति' : 'Persons')}
               </span>
             </div>
           </div>
 
           {/* Stepper Buttons (- and +) with improved touch targets & visibility */}
-          <div className="flex items-center gap-1 shrink-0 bg-[#F5F5F3] p-1 rounded-full border border-[#E8E8E6]">
+          <div className="flex items-center gap-0.5 sm:gap-1 shrink-0 bg-[#F5F5F3] p-1 rounded-full border border-[#E8E8E6]">
             <button
               type="button"
               onClick={decrementTravelers}

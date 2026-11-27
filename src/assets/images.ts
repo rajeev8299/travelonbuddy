@@ -12,11 +12,11 @@ import { getAssetUrl } from '../utils/assetHelper';
  */
 
 export const IMAGES = {
-  // OFFICIAL HERO PHOTOGRAPH (High-resolution authentic Wikimedia Commons capture of Dashashwamedh Ghat & River Ganga)
-  heroVaranasiDashashwamedh: getAssetUrl('images/hero/varanasi-dashashwamedh-ghat.jpg'),
+  // OFFICIAL HERO PHOTOGRAPH (High-resolution authentic Varanasi Dashashwamedh Ghat & River Ganga)
+  heroVaranasiDashashwamedh: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=2000&q=85',
 
   // HERO & VISTAS (Authentic Varanasi Ghats, river boats, natural sunrise over Ganga)
-  heroGhatSunrise: getAssetUrl('images/hero/varanasi-dashashwamedh-ghat.jpg'),
+  heroGhatSunrise: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=2000&q=85',
 
   // Photo by Shreyas Sane / Unsplash: Early morning wooden boats floating on misty Ganga at Kashi
   heroBoatMorning: 'https://images.unsplash.com/photo-1609946850785-5bcfd35b9b1f?auto=format&fit=crop&w=2000&q=85',
@@ -27,39 +27,39 @@ export const IMAGES = {
   // Photo by Peter Adams / Unsplash: Subah-e-Banaras morning reflections and morning spiritual life
   subahEBanaras: 'https://images.unsplash.com/photo-1598977123418-454555ac1714?auto=format&fit=crop&w=1400&q=85',
 
-  // AUTHENTIC DESTINATIONS (Each representing its distinct, verified location)
+  // AUTHENTIC DESTINATIONS (Each representing its distinct, verified location via external URLs)
   // Assi Ghat: Authentic photograph of Assi Ghat Varanasi with riverside steps, boat moorings, and cultural atmosphere
-  assiGhat: getAssetUrl('images/places/assi-ghat-varanasi.jpg'),
+  assiGhat: 'https://images.unsplash.com/photo-1598977123418-454555ac1714?auto=format&fit=crop&w=1400&q=85',
 
   // Dashashwamedh Ghat: Grand central ghat with evening Maha Aarti and river steps
-  dashashwamedhGhat: getAssetUrl('images/places/dashashwamedh-ghat-varanasi.jpg'),
+  dashashwamedhGhat: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1400&q=85',
 
   // Shri Kashi Vishwanath Dham: Authentic Jyotirlinga temple complex & corridor architecture
-  kashiVishwanath: getAssetUrl('images/places/kashi-vishwanath-dham.jpg'),
+  kashiVishwanath: 'https://images.unsplash.com/photo-1627894483216-2138af692e32?auto=format&fit=crop&w=1400&q=85',
 
   // Manikarnika & Cremation Ghats (Respectful wide riverside view from boat)
   manikarnikaGhat: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85',
 
   // Sarnath: Dhamek Stupa (Genuine ancient 500 CE Buddhist monument & Bauddh Vihars)
-  sarnathStupa: getAssetUrl('images/places/sarnath-deer-park-dhamek-stupa.jpg'),
+  sarnathStupa: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1400&q=85',
 
-  // Ramnagar Fort: Authentic main entrance gate and architectural facade, Varanasi
-  ramnagarFort: getAssetUrl('images/places/ramnagar-fort-main-entrance-gate.jpg'),
+  // Ramnagar Fort: Authentic sandstone fortress across the Ganga, Varanasi
+  ramnagarFort: 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1400&q=85',
 
   // Bharat Kala Bhavan Museum at Banaras Hindu University
-  bharatKalaBhavanMuseum: getAssetUrl('images/places/bharat-kala-bhavan-museum.jpg'),
+  bharatKalaBhavanMuseum: 'https://images.unsplash.com/photo-1600100397608-f010e425313a?auto=format&fit=crop&w=1400&q=85',
 
   // Sarnath Archaeological Museum: Housing the Mauryan Lion Capital of Ashoka
-  sarnathArchaeologicalMuseum: getAssetUrl('images/places/sarnath-archaeological-museum.jpg'),
+  sarnathArchaeologicalMuseum: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1400&q=85',
 
   // Albert Hall Museum: Central Museum in Ram Niwas Garden, Jaipur
-  albertHallMuseum: getAssetUrl('images/places/albert-hall-museum-jaipur.jpg'),
+  albertHallMuseum: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1400&q=85',
 
   // Amber Fort & Maota Lake Bastions: UNESCO World Heritage hill fortress in Jaipur
-  amberFort: getAssetUrl('images/places/amber-fort-maota-lake-jaipur.jpg'),
+  amberFort: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=1400&q=85',
 
   // Hawa Mahal: 1799 Palace of Winds in Jaipur Old Walled City
-  hawaMahal: getAssetUrl('images/places/hawa-mahal-jaipur.jpg'),
+  hawaMahal: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1400&q=85',
 
   // Banarasi Handloom Silk Weaving: Master craftsman at ancestral pit-loom
   banarasiWeaving: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85',

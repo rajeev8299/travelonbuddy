@@ -10,6 +10,8 @@ interface ProgressiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement
   rootMargin?: string;
 }
 
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1200&q=80';
+
 export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   src,
   alt,
@@ -21,6 +23,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   ...rest
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [imgSrc, setImgSrc] = useState(src);
   const [shouldLoad, setShouldLoad] = useState(priority);
   const imgRef = useRef<HTMLDivElement>(null);
 
@@ -70,11 +73,17 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
       {shouldLoad && (
         <img
-          src={src}
+          src={imgSrc}
           alt={alt}
           loading={priority ? 'eager' : 'lazy'}
           fetchPriority={priority ? 'high' : 'auto'}
           onLoad={() => setIsLoaded(true)}
+          onError={() => {
+            if (imgSrc !== FALLBACK_IMAGE) {
+              setImgSrc(FALLBACK_IMAGE);
+            }
+            setIsLoaded(true);
+          }}
           className={`w-full h-full object-cover transition-opacity duration-500 ease-out ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           } ${className}`}
