@@ -57,6 +57,14 @@ export const Navbar: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
+  const handleNavClick = (path: string, e: React.MouseEvent) => {
+    setMobileMenuOpen(false);
+    if (!path.startsWith('/#') && location.pathname === path) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -69,6 +77,7 @@ export const Navbar: React.FC = () => {
         {/* Left: Minimalist TravelOnBuddies Logo & Typography */}
         <Link
           to="/"
+          onClick={(e) => handleNavClick('/', e)}
           className="flex items-center gap-2 sm:gap-2.5 shrink-0 min-w-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5F1F]/50 rounded-lg p-0.5"
         >
           <img
@@ -97,6 +106,7 @@ export const Navbar: React.FC = () => {
               <Link
                 key={link.path}
                 to={link.path}
+                onClick={(e) => handleNavClick(link.path, e)}
                 className={`text-[13px] font-medium tracking-normal transition-all duration-200 relative py-1 whitespace-nowrap ${
                   isActive(link.path)
                     ? 'text-[#1D1D1F] font-semibold after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:rounded-full after:bg-[#FF5F1F]'
@@ -192,7 +202,7 @@ export const Navbar: React.FC = () => {
                   <Link
                     key={link.path}
                     to={link.path}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={(e) => handleNavClick(link.path, e)}
                     className={`text-sm font-medium py-2 px-3 rounded-xl transition ${
                       isActive(link.path)
                         ? 'text-[#FF5F1F] bg-[#FF5F1F]/10 font-semibold'

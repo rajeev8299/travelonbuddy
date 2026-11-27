@@ -152,3 +152,52 @@ export const IMAGE_AUDIT_LEDGER = [
     url: IMAGES.ramnagarFort
   }
 ];
+
+/**
+ * Strictly supported launch cities (Varanasi / Banaras & Jaipur only).
+ */
+export const SUPPORTED_CITIES = ['Varanasi', 'Jaipur'] as const;
+export type SupportedCity = (typeof SUPPORTED_CITIES)[number];
+
+/**
+ * Reusable Two-City External Image Mapping System (Varanasi + Jaipur only).
+ * All URLs are verified external HTTPS photographs.
+ */
+export const destinationImages = {
+  varanasi: {
+    name: 'Varanasi',
+    hero: IMAGES.heroVaranasiDashashwamedh,
+    fallback: IMAGES.dashashwamedhGhat,
+    attractions: {
+      assiGhat: IMAGES.assiGhat,
+      dashashwamedhGhat: IMAGES.dashashwamedhGhat,
+      manikarnikaGhat: IMAGES.manikarnikaGhat,
+      kashiVishwanath: IMAGES.kashiVishwanath,
+      sarnathStupa: IMAGES.sarnathStupa,
+      ramnagarFort: IMAGES.ramnagarFort,
+      bharatKalaBhavanMuseum: IMAGES.bharatKalaBhavanMuseum,
+      sarnathArchaeologicalMuseum: IMAGES.sarnathArchaeologicalMuseum,
+      gangaAarti: IMAGES.gangaAartiEvening,
+      subahEBanaras: IMAGES.subahEBanaras,
+      banarasiWeaving: IMAGES.banarasiWeaving,
+      banarasiStreetFood: IMAGES.banarasiStreetFood,
+    },
+  },
+  jaipur: {
+    name: 'Jaipur',
+    hero: IMAGES.amberFort,
+    fallback: IMAGES.hawaMahal,
+    attractions: {
+      hawaMahal: IMAGES.hawaMahal,
+      amberFort: IMAGES.amberFort,
+      albertHallMuseum: IMAGES.albertHallMuseum,
+    },
+  },
+} as const;
+
+export function getCityFallbackImage(city?: string): string {
+  if (city && city.toLowerCase().includes('jaipur')) {
+    return destinationImages.jaipur.fallback;
+  }
+  return destinationImages.varanasi.fallback;
+}
